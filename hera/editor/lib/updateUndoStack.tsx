@@ -13,7 +13,6 @@ export default function updateUndoStack(
   entry: UndoEntry,
   id: string | undefined,
 ) {
-  console.log('updateUndoStack', undoStack);
   const lastKey = undoStack.at(
     undoStackIndex != null ? undoStackIndex : -1,
   )?.[0];
