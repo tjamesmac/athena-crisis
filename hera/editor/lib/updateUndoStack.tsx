@@ -1,10 +1,19 @@
+import Storage from '@deities/ui/Storage.tsx';
 import { EditorState, SetEditorStateFunction, UndoEntry } from '../Types.tsx';
+
+export const UNDO_STACK_KEY = (id: string | undefined) =>
+  `map-editor-undo-stack-${id ? `${id}` : 'fallback'}`;
+
+export const UNDO_STACK_INDEX_KEY = (id: string | undefined) =>
+  `map-editor-undo-stack-index-${id ? `${id}` : 'fallback'}`;
 
 export default function updateUndoStack(
   { setEditorState }: { setEditorState: SetEditorStateFunction },
   { undoStack, undoStackIndex }: EditorState,
   entry: UndoEntry,
+  id: string | undefined,
 ) {
+  console.log('updateUndoStack', undoStack);
   const lastKey = undoStack.at(
     undoStackIndex != null ? undoStackIndex : -1,
   )?.[0];
@@ -24,4 +33,8 @@ export default function updateUndoStack(
     ],
     undoStackIndex: null,
   });
+
+  const stack = undoStack.map(([key, value]) => [key, value.toJSON()]);
+
+  Storage.setItem(UNDO_STACK_KEY(id), JSON.stringify(stack));
 }
